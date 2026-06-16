@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EasyPageX Grid</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap');
+
+  :root {
+    --bg: #0a0e2a;
+    --blue-deep: #060c22;
+    --btn-off: #0d0d0d;
+    --btn-on: #1a1400;
+    --yellow: #f5c800;
+    --yellow-glow: #ffe55a;
+    --yellow-dim: #7a6400;
+    --grid-gap: 10px;
+    --btn-size: clamp(64px, 9vw, 88px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% 0%, #0e1a5c55 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, #0d1240 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, #0d1240 40px);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px 70px;
+    font-family: 'Share Tech Mono', monospace;
+    gap: 28px;
+  }
+
+  .header {
+    letter-spacing: 0.25em;
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(11px, 1.4vw, 15px);
+    color: #3a4a9a;
+    text-transform: uppercase;
+  }
+
+  /* LCD panel bezel */
+  .panel {
+    background: #040710;
+    border: 3px solid #1a2060;
+    border-radius: 10px;
+    padding: 36px;
+    box-shadow:
+      0 0 0 1px #0a1030,
+      0 0 40px #0022aa33,
+      inset 0 0 30px #00000088;
+    position: relative;
+  }
+
+  .panel::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1c2a80 0%, #080e2a 50%, #1c2a80 100%);
+    z-index: -1;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, var(--btn-size));
+    grid-template-rows: repeat(5, var(--btn-size));
+    gap: var(--grid-gap);
+  }
+
+  .btn {
+    width: var(--btn-size);
+    height: var(--btn-size);
+    background: var(--btn-off);
+    border: 2px solid #2a2200;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(22px, 3.2vw, 38px);
+    position: relative;
+    transition: background 0.08s, box-shadow 0.08s, border-color 0.08s, transform 0.06s;
+    box-shadow:
+      inset 0 -3px 6px #000a,
+      inset 0 1px 2px #ffffff08,
+      0 0 0 1px #1a1200;
+    filter: grayscale(1) sepia(1) saturate(0) brightness(0.25);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+  }
+
+  /* segmented LCD overlay per button */
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 4px;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      #0003 4px
+    );
+    pointer-events: none;
+  }
+
+  .btn:active {
+    transform: scale(0.93);
+  }
+
+  .btn.lit {
+    background: var(--btn-on);
+    border-color: var(--yellow);
+    filter: grayscale(0) sepia(1) saturate(6) brightness(1.1) hue-rotate(-10deg);
+    box-shadow:
+      inset 0 -3px 6px #000a,
+      inset 0 1px 2px #ffffff18,
+      0 0 10px var(--yellow),
+      0 0 28px #f5c80088,
+      0 0 2px var(--yellow-glow);
+  }
+
+  /* Footer link button */
+  .footer-btn {
+    display: inline-block;
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: clamp(13px, 2vw, 18px);
+    letter-spacing: 0.18em;
+    text-decoration: none;
+    color: var(--yellow);
+    background: #0d0d0d;
+    border: 2px solid var(--yellow);
+    border-radius: 6px;
+    padding: 12px 36px;
+    text-transform: uppercase;
+    box-shadow:
+      0 0 10px #f5c80060,
+      0 0 28px #f5c80022,
+      inset 0 0 8px #00000088;
+    transition: box-shadow 0.15s, background 0.15s;
+    position: relative;
+  }
+
+  .footer-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 4px;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      #0003 4px
+    );
+    pointer-events: none;
+  }
+
+  .footer-btn:hover {
+    background: #1a1200;
+    box-shadow:
+      0 0 18px #f5c800aa,
+      0 0 40px #f5c80044,
+      inset 0 0 8px #00000088;
+  }
+
+  .footer-btn:active {
+    transform: scale(0.97);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">[ GRID TERMINAL v1.0 ]</div>
+
+<div class="panel">
+  <div class="grid" id="grid"></div>
+</div>
+
+<a class="footer-btn" href="https://easypagex.github.io/48/" target="_blank" rel="noopener">
+  EasyPageX
+</a>
+
+<script>
+// 25 emojis: internet, computers, money, people-related
+const emojis = [
+  '💻','🖥️','🖱️','📱','📡',
+  '🌐','🔌','💾','💿','🖨️',
+  '💰','💵','💸','🏦','💳',
+  '🪙','💹','📈','🤑','💎',
+  '👤','🧑‍💻','👨‍💼','🔐','⚙️'
+];
+
+// Build grid
+const grid = document.getElementById('grid');
+emojis.forEach((emoji, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'btn';
+  btn.textContent = emoji;
+  btn.setAttribute('aria-label', emoji);
+  btn.addEventListener('click', () => toggleBtn(btn, i));
+  grid.appendChild(btn);
+});
+
+// AudioContext for ding-dong sounds
+let ctx;
+function getCtx() {
+  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+  return ctx;
+}
+
+// Each button gets unique frequency pair
+// Airline cabin crew chime — warm, mellow dong then ding (or ding then dong)
+// Each button gets a unique pitch pair from a pentatonic-ish set
+const chimeNotes = [523.25, 587.33, 659.25, 698.46, 783.99, 880.00, 987.77, 1046.50];
+
+function playChimeTone(ac, freq, startTime, duration) {
+  const osc = ac.createOscillator();
+  const gainNode = ac.createGain();
+
+  // Slight detune oscillator layered for warmth
+  const osc2 = ac.createOscillator();
+  const gain2 = ac.createGain();
+
+  // Lowpass filter — softens the tone like a real chime
+  const filter = ac.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(2200, startTime);
+  filter.Q.setValueAtTime(0.7, startTime);
+
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, startTime);
+  osc2.type = 'triangle';
+  osc2.frequency.setValueAtTime(freq * 1.003, startTime); // slight detune for body
+
+  osc.connect(gainNode);
+  osc2.connect(gain2);
+  gainNode.connect(filter);
+  gain2.connect(filter);
+  filter.connect(ac.destination);
+
+  // Attack: fast, Decay: long smooth tail — classic chime envelope
+  gainNode.gain.setValueAtTime(0, startTime);
+  gainNode.gain.linearRampToValueAtTime(0.38, startTime + 0.015);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+  gain2.gain.setValueAtTime(0, startTime);
+  gain2.gain.linearRampToValueAtTime(0.12, startTime + 0.015);
+  gain2.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+  osc.start(startTime);
+  osc.stop(startTime + duration);
+  osc2.start(startTime);
+  osc2.stop(startTime + duration);
+}
+
+function playSound(index, isOn) {
+  const ac = getCtx();
+  const noteA = chimeNotes[index % chimeNotes.length];
+  const noteB = chimeNotes[(index + 3) % chimeNotes.length]; // a fifth-ish apart
+
+  const now = ac.currentTime;
+  const gap = 0.38; // time between the two chime strikes
+
+  if (isOn) {
+    // ON: low → high (ding-DONG ascending — boarding call style)
+    playChimeTone(ac, noteA * 0.75, now, 1.4);
+    playChimeTone(ac, noteB * 0.75, now + gap, 1.6);
+  } else {
+    // OFF: high → low (descending — end of announcement)
+    playChimeTone(ac, noteB * 0.75, now, 1.4);
+    playChimeTone(ac, noteA * 0.75, now + gap, 1.6);
+  }
+}
+
+function toggleBtn(btn, index) {
+  const isNowOn = !btn.classList.contains('lit');
+  btn.classList.toggle('lit', isNowOn);
+  playSound(index, isNowOn);
+}
+</script>
+</body>
+</html>
